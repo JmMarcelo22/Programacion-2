@@ -1,0 +1,168 @@
+package Juego2;
+
+import java.util.Random;
+
+public class JuegoAdivinaPar extends JuegoAdivinaNumero {
+    public JuegoAdivinaPar(int vidas) {
+        super(vidas);
+    }
+
+    @Override
+    protected int generarNumeroAleatorio() {
+        Random rand = new Random();
+        int num;
+        do {
+            num = rand.nextInt(11); 
+        } while (num % 2 != 0);
+        return num;
+    }
+
+    @Override
+    public boolean validaNumero(int numero) {
+        if (super.validaNumero(numero)) {
+            if (numero % 2 == 0) {
+                return true;
+            }
+            System.out.println("Error: Debes ingresar un numero par");
+        }
+        return false;
+    }
+
+    @Override
+    public void juega() {
+        System.out.println("\n--- ADIVINA EL NUMERO PAR (0-10) ---");
+        super.juega();
+    }
+}
+
+package Juego2;
+import java.util.Random;
+import java.util.Scanner;
+
+public class JuegoAdivinaNumero extends Juego2 {
+    protected int numeroAAdivinar;
+    protected static Scanner scanner = new Scanner(System.in);
+
+    public JuegoAdivinaNumero(int vidas) {
+        this.numeroDeVidas = vidas;
+    }
+
+    protected int generarNumeroAleatorio() {
+        return new Random().nextInt(11); 
+    }
+
+    public boolean validaNumero(int numero) {
+        if (numero >= 0 && numero <= 10) {
+            return true;
+        }
+        System.out.println("Error: El numero debe estar entre 0 y 10");
+        return false;
+    }
+
+    public void juega() {
+        reiniciaPartida();
+        numeroAAdivinar = generarNumeroAleatorio();
+        
+        System.out.println("\nAdivina un numero entre 0 y 10:");
+        
+        while (numeroDeVidas > 0) {
+            try {
+                int numeroUsuario = scanner.nextInt();
+                
+                if (!validaNumero(numeroUsuario)) {
+                    continue;
+                }
+                
+                if (numeroUsuario == numeroAAdivinar) {
+                    System.out.println("Acertaste!");
+                    actualizaRecord();
+                    return;
+                } else {
+                    System.out.println("Fallaste. El numero es " + 
+                        (numeroAAdivinar > numeroUsuario ? "mayor" : "menor"));
+                    quitaVida();
+                    
+                    if (numeroDeVidas > 0) {
+                        System.out.println("Intenta de nuevo. Te quedan " + numeroDeVidas + " vidas.");
+                    }
+                }
+            } catch (Exception e) {
+                System.out.println("Error: Ingresa solo numeros enteros");
+                scanner.next();
+            }
+        }
+        System.out.println("Game over! No te quedan vidas.");
+        System.out.println("El numero era: " + numeroAAdivinar);
+    }
+}
+package Juego2;
+import java.util.Random;
+
+public class JuegoAdivinaImpar extends JuegoAdivinaNumero {
+    public JuegoAdivinaImpar(int vidas) {
+        super(vidas);
+    }
+
+    @Override
+    protected int generarNumeroAleatorio() {
+        Random rand = new Random();
+        int num;
+        do {
+            num = rand.nextInt(11); 
+        } while (num % 2 == 0);
+        return num;
+    }
+
+    @Override
+    public boolean validaNumero(int numero) {
+        if (super.validaNumero(numero)) {
+            if (numero % 2 != 0) {
+                return true;
+            }
+            System.out.println("Error: Debes ingresar un numero impar");
+        }
+        return false;
+    }
+
+    @Override
+    public void juega() {
+        System.out.println("\n--- ADIVINA EL NUMERO IMPAR (0-10) ---");
+        super.juega();
+    }
+}
+package Juego2;
+public class Juego2 {
+    protected int numeroDeVidas;
+    protected int record;
+
+    public void reiniciaPartida() 
+    {
+        numeroDeVidas = 3;  
+    }
+
+    public void actualizaRecord() {
+        if (numeroDeVidas > record) {
+            record = numeroDeVidas;
+        }
+    }
+
+    public boolean quitaVida() {
+        numeroDeVidas--;
+        return numeroDeVidas > 0;
+    }
+}
+package Juego2;
+public class AppJuego2 {
+    public static void main(String[] args) {
+
+        JuegoAdivinaNumero juegoNormal = new JuegoAdivinaNumero(3);
+        JuegoAdivinaPar juegoPar = new JuegoAdivinaPar(3);
+        JuegoAdivinaImpar juegoImpar = new JuegoAdivinaImpar(3);
+
+        juegoNormal.juega();
+        juegoPar.juega();
+        juegoImpar.juega();
+
+    }
+
+}
